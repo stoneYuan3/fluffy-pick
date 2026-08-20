@@ -11,3 +11,36 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum CardStatus {
+  normal
+  archived
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(255)
+  email       String   @unique @db.VarChar(255)
+  password    String
+  avatar      String?
+  createdDate DateTime @default(now()) @map("created_date")
+
+  cards       Card[]
+
+  @@map("users")
+}
+
+model Card {
+  id          Int        @id @default(autoincrement())
+  creatorId   Int        @map("creator_id")
+  name        String     @unique @db.VarChar(255)
+  bio         String?
+  avatar      String?
+  assigned    Int        @default(0)
+  createdDate DateTime   @default(now()) @map("created_date")
+  status      CardStatus @default(normal)
+
+  creator     User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@map("cards")
+}
