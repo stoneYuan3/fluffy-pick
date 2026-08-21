@@ -1,3 +1,19 @@
+
+# Start Deving
+
+## Start DB
+in root
+docker compose up -d postgres
+
+## Start Frontend and Backend
+cd frontend
+npm run dev
+
+cd backend
+npm run dev
+
+
+
 ### CONNECT EXISTING DATABASE:
   1. Configure your DATABASE_URL in prisma.config.ts
   2. Run prisma db pull to introspect your database.
