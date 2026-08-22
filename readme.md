@@ -12,6 +12,14 @@ npm run dev
 cd backend
 npm run dev
 
+# During Dev
+
+migrate the db after changing schema prisma
+
+cd backend
+npx prisma migrate dev --name add_card_activated_at
+npx prisma generate
+
 
 
 ### CONNECT EXISTING DATABASE:

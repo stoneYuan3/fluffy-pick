@@ -39,6 +39,7 @@ model Card {
   assigned    Int        @default(0)
   createdDate DateTime   @default(now()) @map("created_date")
   status      CardStatus @default(normal)
+  activatedAt DateTime?  @map("activated_at")
 
   creator     User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 

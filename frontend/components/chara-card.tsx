@@ -5,12 +5,14 @@ export interface CharaCardProps {
   name: string | null;
   avatar: string | null;
   state?: CardState;
+  onClick?: () => void;
 }
 
-export function CharaCard({ name, avatar, state = "normal" }: CharaCardProps) {
+export function CharaCard({ name, avatar, state = "normal", onClick }: CharaCardProps) {
   return (
     <CharaCardShell
       state={state}
+      onClick={onClick}
       avatar={
         avatar ? (
           <img src={avatar} alt="" className="w-full h-full rounded-full aspect-square object-cover" />
