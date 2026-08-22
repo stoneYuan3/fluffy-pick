@@ -21,7 +21,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+    <div className="flex flex-1 flex-col">
       <header className="flex items-center justify-between border-b border-black/[.08] bg-white px-6 py-4 dark:border-white/[.08] dark:bg-zinc-950">
         <span className="text-sm text-zinc-600 dark:text-zinc-400">fluffy-pick</span>
         <div className="flex items-center gap-4 text-sm">

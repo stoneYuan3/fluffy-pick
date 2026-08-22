@@ -53,6 +53,7 @@ export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: Cha
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
           className="card-name m-auto border-0 bg-transparent p-0 text-sm outline-none focus:ring-0"
+          placeholder="名字"
         />
       }
     />

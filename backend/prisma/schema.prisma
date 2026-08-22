@@ -33,7 +33,7 @@ model User {
 model Card {
   id          Int        @id @default(autoincrement())
   creatorId   Int        @map("creator_id")
-  name        String     @unique @db.VarChar(255)
+  name        String     @db.VarChar(255)
   bio         String?
   avatar      String?
   assigned    Int        @default(0)

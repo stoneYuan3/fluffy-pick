@@ -13,7 +13,7 @@ export function CharaCard({ name, avatar, state = "normal" }: CharaCardProps) {
       state={state}
       avatar={
         avatar ? (
-          <img src={avatar} alt="" className="w-full h-full rounded-full object-cover" />
+          <img src={avatar} alt="" className="w-full h-full rounded-full aspect-square object-cover" />
         ) : (
           <div className="w-full h-full rounded-full bg-zinc-200 dark:bg-zinc-800" />
         )
