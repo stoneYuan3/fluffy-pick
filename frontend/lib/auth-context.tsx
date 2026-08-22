@@ -15,6 +15,7 @@ export interface User {
   name: string;
   email: string;
   avatar: string | null;
+  hasCards: boolean;
 }
 
 interface AuthResponse {
@@ -25,8 +26,8 @@ interface AuthResponse {
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<User>;
+  signup: (name: string, email: string, password: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -58,13 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (username: string, password: string) => {
     const data = await apiFetch<AuthResponse>("/auth/login", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
     setToken(data.token);
     setUser(data.user);
+    return data.user;
   }, []);
 
   const signup = useCallback(async (name: string, email: string, password: string) => {
@@ -74,6 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     setToken(data.token);
     setUser(data.user);
+    return data.user;
   }, []);
 
   const logout = useCallback(() => {

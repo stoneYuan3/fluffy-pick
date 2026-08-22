@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FCF5E5;
+  --foreground: #463C22;
+  --green: #5C8538;
+  --white: #FCFAF1;
+  --pure-white: #FFFFFF;
+  --dark-brown: #463C22;
 }
 
 @theme inline {
@@ -10,6 +14,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-xiangcui: var(--font-xiangcui-song);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +28,44 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.btn {
+  width: fit-content;
+  padding: 12px 24px;
+  margin: auto;
+  border-radius: 18px;
+}
+.btn--primary {
+  background: var(--green);
+  color: var(--white);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+}
+.btn--secondary {
+  background: var(--pure-white);
+  color: var(--dark-brown);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.card {
+  aspect-ratio: 250/660;
+  max-width: 250px;
+  width: 100%;
+  /* width: 250px; */
+  background: var(--white);
+  border-radius: 15px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+
+}
+.card-name {
+  font-size: 64px;
+  font-family: var(--font-xiangcui-song), serif;
+  letter-spacing: 15%;
+  height: 100%;
+  padding-bottom: 20px;
 }

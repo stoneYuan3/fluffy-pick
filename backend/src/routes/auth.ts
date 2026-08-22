@@ -8,8 +8,9 @@ const router = Router();
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function publicUser(u: { id: number; name: string; email: string; avatar: string | null }) {
-  return { id: u.id, name: u.name, email: u.email, avatar: u.avatar };
+async function publicUser(u: { id: number; name: string; email: string; avatar: string | null }) {
+  const card = await prisma.card.findFirst({ where: { creatorId: u.id }, select: { id: true } });
+  return { id: u.id, name: u.name, email: u.email, avatar: u.avatar, hasCards: card !== null };
 }
 
 router.post("/signup", async (req: Request, res: Response) => {
@@ -32,7 +33,7 @@ router.post("/signup", async (req: Request, res: Response) => {
       data: { name: name.trim(), email: email.trim().toLowerCase(), password: hashed },
     });
     const token = signToken(user.id);
-    return res.json({ token, user: publicUser(user) });
+    return res.json({ token, user: await publicUser(user) });
   } catch (err: unknown) {
     if (
       typeof err === "object" &&
@@ -48,26 +49,26 @@ router.post("/signup", async (req: Request, res: Response) => {
 });
 
 router.post("/login", async (req: Request, res: Response) => {
-  const { email, password } = req.body ?? {};
+  const { username, password } = req.body ?? {};
 
-  if (typeof email !== "string" || typeof password !== "string") {
-    return res.status(400).json({ error: "Email and password are required" });
+  if (typeof username !== "string" || typeof password !== "string") {
+    return res.status(400).json({ error: "Username and password are required" });
   }
 
-  const user = await prisma.user.findUnique({ where: { email: email.trim().toLowerCase() } });
+  const user = await prisma.user.findUnique({ where: { name: username.trim() } });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) return res.status(401).json({ error: "Invalid credentials" });
 
   const token = signToken(user.id);
-  return res.json({ token, user: publicUser(user) });
+  return res.json({ token, user: await publicUser(user) });
 });
 
 router.get("/me", requireAuth, async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId! } });
   if (!user) return res.status(401).json({ error: "User not found" });
-  return res.json({ user: publicUser(user) });
+  return res.json({ user: await publicUser(user) });
 });
 
 export default router;

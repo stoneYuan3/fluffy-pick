@@ -9,13 +9,13 @@ import { AuthCard, buttonCls, inputCls } from "./auth-card";
 export function LoginForm() {
   const router = useRouter();
   const { user, loading, login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) router.replace("/home");
+    if (!loading && user) router.replace(user.hasCards ? "/home" : "/add-card");
   }, [loading, user, router]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -23,8 +23,8 @@ export function LoginForm() {
     setError(null);
     setSubmitting(true);
     try {
-      await login(email, password);
-      router.replace("/home");
+      const u = await login(username, password);
+      router.replace(u.hasCards ? "/home" : "/add-card");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -36,14 +36,14 @@ export function LoginForm() {
     <AuthCard title="Log in">
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5 text-sm">
-          <span className="text-zinc-700 dark:text-zinc-300">Email</span>
+          <span className="text-zinc-700 dark:text-zinc-300">Username</span>
           <input
-            type="email"
-            autoComplete="email"
+            type="text"
+            autoComplete="username"
             required
             className={inputCls}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </label>
         <label className="flex flex-col gap-1.5 text-sm">

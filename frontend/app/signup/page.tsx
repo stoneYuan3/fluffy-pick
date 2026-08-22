@@ -16,7 +16,7 @@ export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) router.replace("/home");
+    if (!loading && user) router.replace(user.hasCards ? "/home" : "/add-card");
   }, [loading, user, router]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -24,8 +24,8 @@ export default function SignupPage() {
     setError(null);
     setSubmitting(true);
     try {
-      await signup(name, email, password);
-      router.replace("/home");
+      const u = await signup(name, email, password);
+      router.replace(u.hasCards ? "/home" : "/add-card");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Signup failed");
     } finally {
