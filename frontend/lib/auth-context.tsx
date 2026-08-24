@@ -9,19 +9,9 @@ import {
   type ReactNode,
 } from "react";
 import { ApiError, apiFetch, clearToken, getToken, setToken } from "./api";
+import { AuthResponse, MeResponse, type User } from "./schemas";
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  avatar: string | null;
-  hasCards: boolean;
-}
-
-interface AuthResponse {
-  token: string;
-  user: User;
-}
+export type { User };
 
 interface AuthContextValue {
   user: User | null;
@@ -44,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    apiFetch<{ user: User }>("/auth/me")
+    apiFetch("/auth/me", {}, MeResponse)
       .then((data) => {
         if (!cancelled) setUser(data.user);
       })
@@ -60,20 +50,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const data = await apiFetch<AuthResponse>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-    });
+    const data = await apiFetch(
+      "/auth/login",
+      { method: "POST", body: JSON.stringify({ username, password }) },
+      AuthResponse,
+    );
     setToken(data.token);
     setUser(data.user);
     return data.user;
   }, []);
 
   const signup = useCallback(async (name: string, email: string, password: string) => {
-    const data = await apiFetch<AuthResponse>("/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ name, email, password }),
-    });
+    const data = await apiFetch(
+      "/auth/signup",
+      { method: "POST", body: JSON.stringify({ name, email, password }) },
+      AuthResponse,
+    );
     setToken(data.token);
     setUser(data.user);
     return data.user;

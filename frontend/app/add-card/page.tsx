@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
+import { CharaCreateResponse } from "@/lib/schemas";
 import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/chara-adder";
 
@@ -57,10 +58,11 @@ export default function AddCardPage() {
           avatar: c.avatar ? await fileToBase64(c.avatar) : null,
         })),
       );
-      await apiFetch("/chara", {
-        method: "POST",
-        body: JSON.stringify({ charas: payload }),
-      });
+      await apiFetch(
+        "/chara",
+        { method: "POST", body: JSON.stringify({ charas: payload }) },
+        CharaCreateResponse,
+      );
       setAddedCharas([]);
       router.push("/home");
     } catch (err) {

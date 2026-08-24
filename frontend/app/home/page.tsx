@@ -4,17 +4,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
+import { CharaListResponse, CommitResponse, type Chara } from "@/lib/schemas";
 import { CharaCard } from "@/components/cards/chara-card";
 import type { CardState } from "@/components/cards/chara-card-shell";
 import { useSelection } from "@/hooks/use-selection";
 import Link from "next/link";
-
-interface Chara {
-  id: number;
-  name: string;
-  avatar: string | null;
-  state: "active" | "standby";
-}
 
 export default function HomePage() {
   const router = useRouter();
@@ -30,7 +24,7 @@ export default function HomePage() {
   }, [loading, user, router]);
 
   const loadCharas = useCallback(() => {
-    return apiFetch<{ charas: Chara[] }>("/chara")
+    return apiFetch("/chara", {}, CharaListResponse)
       .then((data) => setCharas(data.charas))
       .catch((err) => setCharasError(err instanceof Error ? err.message : "Failed to load"));
   }, []);
@@ -38,7 +32,7 @@ export default function HomePage() {
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
-    apiFetch<{ charas: Chara[] }>("/chara")
+    apiFetch("/chara", {}, CharaListResponse)
       .then((data) => { if (!cancelled) setCharas(data.charas); })
       .catch((err) => { if (!cancelled) setCharasError(err instanceof Error ? err.message : "Failed to load"); });
     return () => { cancelled = true; };
@@ -48,10 +42,11 @@ export default function HomePage() {
     if (selection.size === 0 || committing) return;
     setCommitting(true);
     try {
-      await apiFetch("/chara/commit", {
-        method: "POST",
-        body: JSON.stringify({ ids: Array.from(selection.ids) }),
-      });
+      await apiFetch(
+        "/chara/commit",
+        { method: "POST", body: JSON.stringify({ ids: Array.from(selection.ids) }) },
+        CommitResponse,
+      );
       selection.clear();
       await loadCharas();
     } catch (err) {

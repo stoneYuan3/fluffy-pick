@@ -1,7 +1,8 @@
-import { Router, type Request, type Response } from "express";
+import { Router, type Request, type Response, type NextFunction } from "express";
 import { prisma } from "../lib/prisma.js";
 import { currentCutoff } from "../lib/cutoff.js";
 import { requireAuth } from "../middleware/auth.js";
+import { CharaCreateBody, CommitBody } from "../lib/schemas.js";
 
 const router = Router();
 
@@ -19,54 +20,33 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
   return res.json({ charas });
 });
 
-router.post("/", requireAuth, async (req: Request, res: Response) => {
-  const { charas } = req.body ?? {};
-  if (!Array.isArray(charas) || charas.length === 0) {
-    return res.status(400).json({ error: "charas must be a non-empty array" });
-  }
-  for (const c of charas) {
-    if (typeof c?.name !== "string" || c.name.trim().length < 1) {
-      return res.status(400).json({ error: "Each chara requires a name" });
-    }
-    if (c.avatar != null && typeof c.avatar !== "string") {
-      return res.status(400).json({ error: "avatar must be a string or null" });
-    }
-  }
-
+router.post("/", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { charas } = CharaCreateBody.parse(req.body);
     const created = await prisma.$transaction(
-      charas.map((c: { name: string; avatar: string | null }) =>
+      charas.map((c) =>
         prisma.card.create({
-          data: {
-            name: c.name.trim(),
-            avatar: c.avatar ?? null,
-            creatorId: req.userId!,
-          },
+          data: { name: c.name, avatar: c.avatar, creatorId: req.userId! },
           select: { id: true, name: true, avatar: true },
         }),
       ),
     );
     return res.json({ charas: created });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Failed to create charas" });
+    return next(err);
   }
 });
 
-router.post("/commit", requireAuth, async (req: Request, res: Response) => {
-  const { ids } = req.body ?? {};
-  if (!Array.isArray(ids) || ids.length === 0 || !ids.every((i) => Number.isInteger(i))) {
-    return res.status(400).json({ error: "ids must be a non-empty array of integers" });
-  }
+router.post("/commit", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { ids } = CommitBody.parse(req.body);
     const result = await prisma.card.updateMany({
       where: { id: { in: ids }, creatorId: req.userId!, status: "normal" },
       data: { activatedAt: new Date(), assigned: { increment: 1 } },
     });
     return res.json({ count: result.count });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Failed to commit selection" });
+    return next(err);
   }
 });
 
