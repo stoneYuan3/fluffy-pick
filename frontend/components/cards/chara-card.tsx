@@ -1,4 +1,5 @@
 import { CharaCardShell, type CardState } from "./chara-card-shell";
+import "./chara-card.css";
 
 export interface CharaCardProps {
   id: number | null;

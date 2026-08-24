@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Images } from "lucide-react";
-import { CharaCardShell } from "./chara-card-shell";
+import { CharaCardShell } from "./cards/chara-card-shell";
 
 export interface CharaAdderProps {
   value: string;
@@ -52,7 +52,7 @@ export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: Cha
           type="text"
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
-          className="card-name m-auto border-0 bg-transparent p-0 text-sm outline-none focus:ring-0"
+          className="card-name m-auto border-0 bg-transparent p-0 outline-none focus:ring-0"
           placeholder="名字"
         />
       }

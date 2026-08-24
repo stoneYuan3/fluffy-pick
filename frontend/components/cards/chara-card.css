@@ -1,0 +1,54 @@
+.card {
+  aspect-ratio: 246/660;
+  width: 100%;
+  background: var(--white);
+  border-radius: 1.25vw;
+  box-shadow: 0 0.3704vh 0.8333vw rgba(0, 0, 0, 0.25);
+  max-height: 64.4531vh;
+}
+
+.card-top-bar {
+  border-radius: 1.25vw 1.25vw 0 0;
+}
+
+.card-name {
+  font-size: 5.9259vw;
+  font-family: var(--font-xiangcui-song), serif;
+  letter-spacing: 15%;
+  height: 100%;
+  max-height: 35vh;
+  padding-bottom: 1.8519vh;
+  /* 20px */
+}
+
+.card-adder .card-name {
+  font-size: 3.7vw;
+}
+
+.card-mark--selected {
+  position: absolute;
+  top: -3%;
+  right: -8%;
+  width: 30%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: 0 0.1852vh 0.2778vw rgba(0, 0, 0, 0.25);
+  /* 0 2px 4px */
+  border: 0.2778vw solid #e53935;
+  /* 4px */
+}
+
+.card-mark--active {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-family: var(--font-xiangcui), serif;
+  font-size: 3.33cqw;
+  letter-spacing: 15%;
+  writing-mode: vertical-rl;
+  border-radius: 1.25vw;
+}

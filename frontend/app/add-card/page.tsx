@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
-import { CharaCard } from "@/components/chara-card";
+import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/chara-adder";
 
 function fileToBase64(file: File): Promise<string> {
@@ -84,12 +84,12 @@ export default function AddCardPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="flex flex-1 flex-col gap-16 items-center justify-center px-4">
-        <div className="card-adder flex flex-row w-full max-w-[750px]">
-          <div className="relative z-0 flex-[1_1_250px] translate-x-[45%] translate-y-[2%] rotate-[-5deg]">
+      <main className="flex flex-1 flex-col gap-[4.4444vw] items-center justify-center px-[1.1111vw]"> {/* gap-16 px-4 */}
+        <div className="card-adder flex flex-row items-center justify-center w-full gap-[2vw] pb-[6vw]">
+          <div className="relative z-0 w-[min(17.0833vw,24.0234vh)] translate-x-[45%] translate-y-[2%] rotate-[-5deg]"> {/* 246px @ 1440x1024 */}
             <CharaCard id={null} name={null} avatar={null} state="deco" />
           </div>
-          <div className="relative z-10 flex-[1_1_250px]">
+          <div className="relative z-10 w-[min(17.0833vw,24.0234vh)]">
             <CharaAdder
               value={newName}
               onValueChange={setNewName}
@@ -97,7 +97,7 @@ export default function AddCardPage() {
               onAvatarChange={setNewAvatar}
             />
           </div>
-          <div className="relative z-0 flex-[1_1_250px] translate-x-[-45%] translate-y-[2%] rotate-[5deg]">
+          <div className="relative z-0 w-[min(17.0833vw,24.0234vh)] translate-x-[-45%] translate-y-[2%] rotate-[5deg]">
             {latestChara ? (
               <CharaCard id={null} name={latestChara.name} avatar={latestAvatarUrl} state="normal" />
             ) : (
@@ -105,13 +105,13 @@ export default function AddCardPage() {
             )}
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex flex-row gap-4">
-            <button className="btn btn--primary text-[24px]" onClick={handleAddCard}>
+        <div className="flex flex-col items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
+          <div className="flex flex-row gap-[1.1111vw]"> {/* gap-4 */}
+            <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
               Add Card
             </button>
             <button
-              className="btn btn--secondary text-[24px] disabled:opacity-50"
+              className="btn btn--secondary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
               disabled={submitting || addedCharas.length === 0}
             >

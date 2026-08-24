@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
-import { CharaCard } from "@/components/chara-card";
-import type { CardState } from "@/components/chara-card-shell";
+import { CharaCard } from "@/components/cards/chara-card";
+import type { CardState } from "@/components/cards/chara-card-shell";
 import { useSelection } from "@/hooks/use-selection";
 import Link from "next/link";
 
@@ -71,8 +71,8 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="flex flex-1 flex-col items-center gap-8 p-8 relative overflow-hidden justify-center items-center">
-        <div className="chara-board flex flex-col items-center p-8">
+      <main className="flex flex-1 flex-col items-center gap-[2.2222vw] p-[2.2222vw] relative overflow-hidden justify-center items-center"> {/* gap-8 p-8 */}
+        <div className="chara-board flex flex-col items-center p-[2.2222vw]"> {/* p-8 */}
           {charasError && <p className="text-sm text-red-600">{charasError}</p>}
           {charas === null && !charasError && (
             <p className="text-sm text-zinc-500">Loading charas...</p>
@@ -95,7 +95,7 @@ export default function HomePage() {
                     name={c.name}
                     avatar={c.avatar}
                     state={displayState}
-                    onClick={() => selection.toggle(c.id)}
+                    onClick={c.state === "active" ? undefined : () => selection.toggle(c.id)}
                   />
                 );
               })}
@@ -103,16 +103,16 @@ export default function HomePage() {
           )}
         </div>
         {selection.size > 0 && (
-          <div className="flex flex-row gap-4 chara-buttons">
+          <div className="flex flex-row gap-[1.1111vw] chara-buttons"> {/* gap-4 */}
             <button
-              className="btn btn--primary text-[20px] disabled:opacity-50"
+              className="btn btn--primary text-[1.3889vw] disabled:opacity-50" /* 20px */
               onClick={handleConfirm}
               disabled={committing}
             >
               {committing ? "Committing..." : "Confirm"}
             </button>
             <button
-              className="btn btn--secondary text-[20px]"
+              className="btn btn--secondary text-[1.3889vw]" /* 20px */
               onClick={() => selection.clear()}
               disabled={committing}
             >
@@ -120,9 +120,9 @@ export default function HomePage() {
             </button>
           </div>
         )}
-        <div className="helper-figure absolute right-[2%] bottom-[-8%] flex flex-col items-center gap-8">
+        <div className="helper-figure absolute right-[2%] bottom-[-8%] flex flex-col items-center gap-[2.2222vw]"> {/* gap-8 */}
           {helperOpened && (
-            <div className="helper-actions flex flex-col items-center gap-4">
+            <div className="helper-actions flex flex-col items-center gap-[1.1111vw]"> {/* gap-4 */}
               <Link className="btn btn--secondary" href="/add-card">Add Card</Link>
               <button
                 onClick={() => {
