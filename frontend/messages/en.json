@@ -1,0 +1,90 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saved": "Saved ✓"
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "noAccount": "No Account?",
+      "signup": "Sign Up",
+      "failed": "Login failed"
+    },
+    "signup": {
+      "title": "Create account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign up",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "login": "Log In",
+      "failed": "Signup failed"
+    }
+  },
+  "home": {
+    "loading": "Loading...",
+    "loadingCharas": "Loading charas...",
+    "empty": "No charas yet.",
+    "failedLoad": "Failed to load",
+    "failedCommit": "Failed to commit",
+    "commit": "Confirm",
+    "moveToArchive": "Archive",
+    "archiving": "Archiving...",
+    "failedArchive": "Failed to archive",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "failedDelete": "Failed to delete",
+    "deleteConfirm": "Are you sure you want to delete {count} cards?",
+    "deleteModeTitle": "Remove Card",
+    "addModeTitle": "Select Card",
+    "exitDeleteMode":"Exit Delete Mode",
+    "committing": "Committing...",
+    "cancel": "Cancel",
+    "addCard": "Add Card",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "addCard": {
+    "loading": "Loading...",
+    "addCard": "Add Card",
+    "done": "Done",
+    "saving": "Saving...",
+    "failedSave": "Failed to save",
+    "namePlaceholder": "Name",
+    "changeAvatar": "Change"
+  },
+  "card": {
+    "active": "On duty"
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "language": "Language"
+    },
+    "password": {
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "mismatch": "New passwords do not match",
+      "tooShort": "New password must be at least 6 characters"
+    },
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved ✓"
+  },
+  "language": {
+    "en": "EN",
+    "zh": "中"
+  }
+}

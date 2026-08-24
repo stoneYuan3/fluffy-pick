@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { CharaCreateResponse } from "@/lib/schemas";
@@ -19,7 +20,8 @@ function fileToBase64(file: File): Promise<string> {
 
 export default function AddCardPage() {
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const t = useTranslations("addCard");
+  const { user, loading } = useAuth();
   const [newName, setNewName] = useState("");
   const [newAvatar, setNewAvatar] = useState<File | null>(null);
 
@@ -66,7 +68,7 @@ export default function AddCardPage() {
       setAddedCharas([]);
       router.push("/home");
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Failed to save");
+      setSubmitError(err instanceof Error ? err.message : t("failedSave"));
     } finally {
       setSubmitting(false);
     }
@@ -79,14 +81,14 @@ export default function AddCardPage() {
   if (loading || !user) {
     return (
       <div className="flex flex-1 items-center justify-center bg-zinc-50 dark:bg-black">
-        <p className="text-sm text-zinc-500">Loading...</p>
+        <p className="text-sm text-zinc-500">{t("loading")}</p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="flex flex-1 flex-col gap-[4.4444vw] items-center justify-center px-[1.1111vw]"> {/* gap-16 px-4 */}
+      <main className="chara-adder flex flex-1 flex-col gap-[4.4444vw] items-center justify-center px-[1.1111vw]"> {/* gap-16 px-4 */}
         <div className="card-adder flex flex-row items-center justify-center w-full gap-[2vw] pb-[6vw]">
           <div className="relative z-0 w-[min(17.0833vw,24.0234vh)] translate-x-[45%] translate-y-[2%] rotate-[-5deg]"> {/* 246px @ 1440x1024 */}
             <CharaCard id={null} name={null} avatar={null} state="deco" />
@@ -110,14 +112,14 @@ export default function AddCardPage() {
         <div className="flex flex-col items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
           <div className="flex flex-row gap-[1.1111vw]"> {/* gap-4 */}
             <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
-              Add Card
+              {t("addCard")}
             </button>
             <button
               className="btn btn--secondary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
               disabled={submitting || addedCharas.length === 0}
             >
-              {submitting ? "Saving..." : "Done"}
+              {submitting ? t("saving") : t("done")}
             </button>
           </div>
           {submitError && <p className="text-sm text-red-600">{submitError}</p>}

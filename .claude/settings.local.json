@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
+    ],
+    "additionalDirectories": [
+      "c:\\YUAN\\ProgramProj\\myOwn\\2026-fluffy-pick\\fluffy-pick\\backend"
+    ]
+  }
+}

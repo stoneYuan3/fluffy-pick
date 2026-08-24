@@ -1,10 +1,14 @@
 import { z } from "zod";
 
+export const Locale = z.enum(["en", "zh-CN"]);
+export type Locale = z.infer<typeof Locale>;
+
 export const User = z.object({
   id: z.number().int(),
   name: z.string(),
   email: z.string(),
   avatar: z.string().nullable(),
+  locale: Locale,
   hasCards: z.boolean(),
 });
 export type User = z.infer<typeof User>;
@@ -17,6 +21,15 @@ export type AuthResponse = z.infer<typeof AuthResponse>;
 
 export const MeResponse = z.object({ user: User });
 export type MeResponse = z.infer<typeof MeResponse>;
+
+export const UpdateProfileResponse = MeResponse;
+export type UpdateProfileResponse = z.infer<typeof UpdateProfileResponse>;
+
+export const UpdateLocaleResponse = z.object({ token: z.string(), user: User });
+export type UpdateLocaleResponse = z.infer<typeof UpdateLocaleResponse>;
+
+export const ChangePasswordResponse = z.object({ ok: z.literal(true) });
+export type ChangePasswordResponse = z.infer<typeof ChangePasswordResponse>;
 
 export const Chara = z.object({
   id: z.number().int(),

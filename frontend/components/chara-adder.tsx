@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Images } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { CharaCardShell } from "./cards/chara-card-shell";
 
 export interface CharaAdderProps {
@@ -12,6 +13,7 @@ export interface CharaAdderProps {
 }
 
 export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: CharaAdderProps) {
+  const t = useTranslations("addCard");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,7 +45,7 @@ export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: Cha
             </div>
           )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-            Change
+            {t("changeAvatar")}
           </div>
         </label>
       }
@@ -53,7 +55,7 @@ export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: Cha
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
           className="card-name m-auto border-0 bg-transparent p-0 outline-none focus:ring-0"
-          placeholder="名字"
+          placeholder={t("namePlaceholder")}
         />
       }
     />

@@ -50,4 +50,29 @@ router.post("/commit", requireAuth, async (req: Request, res: Response, next: Ne
   }
 });
 
+router.post("/archive", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { ids } = CommitBody.parse(req.body);
+    const result = await prisma.card.updateMany({
+      where: { id: { in: ids }, creatorId: req.userId! },
+      data: { status: "archived" },
+    });
+    return res.json({ count: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.post("/delete", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { ids } = CommitBody.parse(req.body);
+    const result = await prisma.card.deleteMany({
+      where: { id: { in: ids }, creatorId: req.userId! },
+    });
+    return res.json({ count: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 export default router;

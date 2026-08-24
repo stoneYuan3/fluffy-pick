@@ -13,18 +13,27 @@ import { AuthResponse, MeResponse, type User } from "./schemas";
 
 export type { User };
 
+const LOCALE_COOKIE = "NEXT_LOCALE";
+
+function writeLocaleCookie(locale: string) {
+  if (typeof document === "undefined") return;
+  document.cookie = `${LOCALE_COOKIE}=${encodeURIComponent(locale)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+}
+
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
   login: (username: string, password: string) => Promise<User>;
   signup: (name: string, email: string, password: string) => Promise<User>;
   logout: () => void;
+  refreshUser: () => Promise<User | null>;
+  setUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     apiFetch("/auth/me", {}, MeResponse)
       .then((data) => {
-        if (!cancelled) setUser(data.user);
+        if (!cancelled) {
+          setUserState(data.user);
+          writeLocaleCookie(data.user.locale);
+        }
       })
       .catch((err) => {
         if (err instanceof ApiError && err.status === 401) clearToken();
@@ -56,7 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       AuthResponse,
     );
     setToken(data.token);
-    setUser(data.user);
+    setUserState(data.user);
+    writeLocaleCookie(data.user.locale);
     return data.user;
   }, []);
 
@@ -67,17 +80,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       AuthResponse,
     );
     setToken(data.token);
-    setUser(data.user);
+    setUserState(data.user);
+    writeLocaleCookie(data.user.locale);
     return data.user;
   }, []);
 
   const logout = useCallback(() => {
     clearToken();
-    setUser(null);
+    setUserState(null);
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    try {
+      const data = await apiFetch("/auth/me", {}, MeResponse);
+      setUserState(data.user);
+      writeLocaleCookie(data.user.locale);
+      return data.user;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const setUser = useCallback((u: User) => {
+    setUserState(u);
+    writeLocaleCookie(u.locale);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, signup, logout, refreshUser, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

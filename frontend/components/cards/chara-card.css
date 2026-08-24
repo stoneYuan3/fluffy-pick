@@ -1,10 +1,28 @@
+@keyframes tilt-shaking {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  50% { transform: rotate(0eg); }
+  75% { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+
 .card {
   aspect-ratio: 246/660;
   width: 100%;
   background: var(--white);
   border-radius: 1.25vw;
   box-shadow: 0 0.3704vh 0.8333vw rgba(0, 0, 0, 0.25);
+  max-height: 34vh;
+}
+.chara-adder .card {
   max-height: 64.4531vh;
+}
+
+.delete-mode .card {
+  animation: tilt-shaking 0.15s infinite;
+}
+.delete-mode .card[data-state=active] {
+  animation: none;
 }
 
 .card-top-bar {
@@ -12,13 +30,15 @@
 }
 
 .card-name {
-  font-size: 5.9259vw;
+  font-size: 4vw;
   font-family: var(--font-xiangcui-song), serif;
-  letter-spacing: 15%;
+  letter-spacing: 10%;
   height: 100%;
   max-height: 35vh;
   padding-bottom: 1.8519vh;
   /* 20px */
+  white-space: nowrap;
+  
 }
 
 .card-adder .card-name {

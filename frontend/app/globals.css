@@ -30,6 +30,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-xiangcui-song);
+}
+
 button {
   cursor: pointer;
 }
@@ -58,6 +62,10 @@ button {
   /* 0 4px 8px */
 }
 
+.btn--red {
+  
+}
+
 
 .chara-board {
   background: radial-gradient(157.36% 157.36% at 50% 50%, rgba(224, 197, 153, 0) 0%, #AE8B52 100%), #FDE897;
@@ -78,4 +86,8 @@ button {
   position: absolute;
   bottom: 5%;
   margin: auto;
+  & h4 {
+    letter-spacing: 15%;
+  }
+
 }

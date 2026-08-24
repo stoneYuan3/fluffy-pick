@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { AuthCard, buttonCls, inputCls } from "./auth-card";
 
 export function LoginForm() {
   const router = useRouter();
+  const t = useTranslations("auth.login");
   const { user, loading, login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,17 +28,17 @@ export function LoginForm() {
       const u = await login(username, password);
       router.replace(u.hasCards ? "/home" : "/add-card");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : t("failed"));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <AuthCard title="Log in">
+    <AuthCard title={t("title")}>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5 text-sm">
-          <span className="text-zinc-700 dark:text-zinc-300">Username</span>
+          <span className="text-zinc-700 dark:text-zinc-300">{t("username")}</span>
           <input
             type="text"
             autoComplete="username"
@@ -47,7 +49,7 @@ export function LoginForm() {
           />
         </label>
         <label className="flex flex-col gap-1.5 text-sm">
-          <span className="text-zinc-700 dark:text-zinc-300">Password</span>
+          <span className="text-zinc-700 dark:text-zinc-300">{t("password")}</span>
           <input
             type="password"
             autoComplete="current-password"
@@ -59,13 +61,13 @@ export function LoginForm() {
         </label>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button type="submit" disabled={submitting} className={buttonCls}>
-          {submitting ? "Logging in..." : "Log in"}
+          {submitting ? t("submitting") : t("submit")}
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
-        No Account?{" "}
+        {t("noAccount")}{" "}
         <Link href="/signup" className="font-medium text-black underline dark:text-white">
-          Sign Up
+          {t("signup")}
         </Link>
       </p>
     </AuthCard>

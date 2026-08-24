@@ -23,6 +23,7 @@ model User {
   email       String   @unique @db.VarChar(255)
   password    String
   avatar      String?
+  locale      String   @default("en") @db.VarChar(10)
   createdDate DateTime @default(now()) @map("created_date")
 
   cards       Card[]

@@ -1,8 +1,12 @@
 import type { ReactNode } from "react";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export function AuthCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <div className="flex flex-1 items-center justify-center relative">
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
       <div className="w-full max-w-sm">
         <h1 className="mb-6 text-2xl font-semibold tracking-tight text-black text-center dark:text-zinc-50">
           {title}

@@ -1,0 +1,90 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "saved": "已保存 ✓"
+  },
+  "auth": {
+    "login": {
+      "title": "登录",
+      "username": "用户名",
+      "password": "密码",
+      "submit": "登录",
+      "submitting": "登录中...",
+      "noAccount": "没有账号？",
+      "signup": "注册",
+      "failed": "登录失败"
+    },
+    "signup": {
+      "title": "创建账号",
+      "name": "姓名",
+      "email": "邮箱",
+      "password": "密码",
+      "submit": "注册",
+      "submitting": "创建中...",
+      "haveAccount": "已有账号？",
+      "login": "登录",
+      "failed": "注册失败"
+    }
+  },
+  "home": {
+    "loading": "加载中...",
+    "loadingCharas": "加载角色中...",
+    "empty": "还没有角色。",
+    "failedLoad": "加载失败",
+    "failedCommit": "提交失败",
+    "commit": "确认",
+    "moveToArchive": "打入冷宫",
+    "archiving": "打入冷宫中...",
+    "failedArchive": "打入冷宫失败",
+    "delete": "遣放出宫",
+    "deleting": "遣放中...",
+    "failedDelete": "遣放失败",
+    "deleteConfirm": "确认将 {count} 张卡片遣放出宫？",
+    "deleteModeTitle": "遣送",
+    "addModeTitle": "宣爱妃侍寝",
+    "exitDeleteMode": "朕宅心仁厚，还是算了", 
+    "committing": "提交中...",
+    "cancel": "取消",
+    "addCard": "添加卡片",
+    "settings": "设置",
+    "logout": "退出"
+  },
+  "addCard": {
+    "loading": "加载中...",
+    "addCard": "添加卡片",
+    "done": "完成",
+    "saving": "保存中...",
+    "failedSave": "保存失败",
+    "namePlaceholder": "名字",
+    "changeAvatar": "更换"
+  },
+  "card": {
+    "active": "侍寝中"
+  },
+  "settings": {
+    "title": "设置",
+    "sections": {
+      "username": "用户名",
+      "email": "邮箱",
+      "password": "密码",
+      "language": "语言"
+    },
+    "password": {
+      "current": "当前密码",
+      "new": "新密码",
+      "confirm": "确认新密码",
+      "mismatch": "两次输入的新密码不一致",
+      "tooShort": "新密码至少 6 个字符"
+    },
+    "save": "保存",
+    "saving": "保存中...",
+    "saved": "已保存 ✓"
+  },
+  "language": {
+    "en": "EN",
+    "zh": "中"
+  }
+}
