@@ -27,7 +27,7 @@ export function CharaCardShell({ state = "normal", avatar, name, onClick }: Char
     >
       <div className="card-top-bar w-full aspect-[250/80] bg-[var(--green)]"></div>
       <div className="mx-auto my-[1.4815vh] w-[78%] aspect-square">{avatar}</div>
-      <div className="[writing-mode:vertical-rl] flex flex-col flex-1 min-h-0 items-center overflow-scroll">{name}</div>
+      <div className="[writing-mode:vertical-rl] flex flex-col flex-1 min-h-0 items-center overflow-hidden">{name}</div>
       {(state === "selected" || state === "active") && (
         <div className={`card-mark card-mark--${state}`}>
           {state === "active" && <span>{t("active")}</span>}

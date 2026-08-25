@@ -126,7 +126,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-1 flex-col">
       <main className="flex flex-1 flex-col items-center gap-[2.2222vw] p-[2.2222vw] relative overflow-hidden justify-center items-center"> {/* gap-8 p-8 */}
-        <div className="chara-board flex flex-col items-center p-[2.2222vw]"> {/* p-8 */}
+        <div className="chara-board flex flex-col items-center p-[2.2222vw] overflow-y-auto"> {/* p-8 */}
           {charasError && <p className="text-sm text-red-600">{charasError}</p>}
           {charas === null && !charasError && (
             <p className="text-sm text-zinc-500">{t("loadingCharas")}</p>
