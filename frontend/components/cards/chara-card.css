@@ -46,13 +46,13 @@
 }
 
 .chara-adder-circle {
-    transform-origin: center center;
-    translate: -25% 2%;
+  transform: rotate(0deg);
+  translate: -6% 4%;
 }
 .chara-adder-circle > div {
   transform-origin: center center;
   flex-shrink: 0;
-  translate: 90% 0%;
+  translate: -50% -50%;
 }
 
 .card-mark--selected {

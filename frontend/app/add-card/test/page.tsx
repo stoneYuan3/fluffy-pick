@@ -92,9 +92,8 @@ export default function AddCardPage() {
   console.log(width)
   console.log(height)
 
-  const total = 12 + 1 + addedCharas.length;
-  const radius = Math.max(width || 0, height || 0);
-  const size = radius * 2;
+  const total = 10 + 1 + addedCharas.length;
+  const radius = (width ?? 0) / 2;
   const h = imgHeight ?? 0;
 
   const getSlotStyle = (index: number) => {
@@ -103,8 +102,8 @@ export default function AddCardPage() {
     const cx = radius - r * Math.sin(angleRad);
     const cy = radius - r * Math.cos(angleRad);
     return {
-      top: `${cy - h / 2}px`,
-      left: `${cx - h / 2}px`,
+      top: `${cy}px`,
+      left: `${cx}px`,
       transform: `rotate(${(-angleRad * 180) / Math.PI}deg)`,
     };
   };
@@ -113,28 +112,28 @@ export default function AddCardPage() {
     <div className="flex flex-1 flex-col">
       <main className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center"> {/* gap-16 px-4 */}
 
-        <div ref={ref} className="w-full h-full">
-          <div className="chara-adder-circle relative" style={{ width: `${size}px`, height: `${size}px` }}>
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={`deco-${i}`}
-                ref={i === 0 ? cardRef : undefined}
-                className="w-[min(17.0833vw,22vh)] absolute"
-                style={getSlotStyle(i)}
-              >
-                <CharaCard id={null} name={null} avatar={null} state="deco" />
-              </div>
-            ))}
-            <div className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(3)}>
+        <div className="w-full h-full">
+          <div ref={ref} className="chara-adder-circle w-[110vw] relative aspect-square">
+            <div className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(0)}>
               <CharaAdder
                 value={newName}
                 onValueChange={setNewName}
                 avatar={newAvatar}
                 onAvatarChange={setNewAvatar}
               />
-            </div>
+            </div>            
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={`deco-${i}`}
+                ref={i === 0 ? cardRef : undefined}
+                className="w-[min(17.0833vw,22vh)] absolute"
+                style={getSlotStyle(i + 1)}
+              >
+                <CharaCard id={null} name={null} avatar={null} state="deco" />
+              </div>
+            ))}
             {addedCharas.map((c, i) => (
-              <div key={`chara-${i}`} className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(4 + i)}>
+              <div key={`chara-${i}`} className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(11 + i)}>
                 <CharaCard id={null} name={c.name} avatar={addedAvatarUrls[i] ?? null} />
               </div>
             ))}
