@@ -59,7 +59,8 @@
     "saving": "Saving...",
     "failedSave": "Failed to save",
     "namePlaceholder": "Name",
-    "changeAvatar": "Change"
+    "changeAvatar": "Change",
+    "warningAddExceed": "You can only add 12 cards in one run"
   },
   "card": {
     "active": "On duty"

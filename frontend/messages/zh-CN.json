@@ -59,7 +59,8 @@
     "saving": "保存中...",
     "failedSave": "保存失败",
     "namePlaceholder": "名字",
-    "changeAvatar": "更换"
+    "changeAvatar": "更换",
+    "warningAddExceed": "一次只能添加12张卡"
   },
   "card": {
     "active": "侍寝中"

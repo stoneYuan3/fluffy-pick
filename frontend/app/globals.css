@@ -7,6 +7,8 @@
   --white: #FCFAF1;
   --pure-white: #FFFFFF;
   --dark-brown: #463C22;
+  --red: #E92C2C;
+  --dark-red: #B11D1D;
 }
 
 @theme inline {

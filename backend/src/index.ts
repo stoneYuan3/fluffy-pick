@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json({ limit: "25mb" }));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
-app.use("/auth", rateLimit({ windowMs: 15 * 60_000, max: 20 }));
+// app.use("/auth", rateLimit({ windowMs: 15 * 60_000, max: 20 }));
 app.use(rateLimit({ windowMs: 60_000, max: 100 }));
 app.use("/auth", authRouter);
 app.use("/chara", charaRouter);

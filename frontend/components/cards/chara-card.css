@@ -30,7 +30,7 @@
 }
 
 .card-name {
-  font-size: 4vw;
+  font-size: 5vh;
   font-family: var(--font-xiangcui-song), serif;
   letter-spacing: 10%;
   /* height: 100%; */
@@ -43,16 +43,6 @@
 
 .card-adder .card-name {
   font-size: 3.7vw;
-}
-
-.chara-adder-circle {
-  transform: rotate(0deg);
-  translate: -6% 4%;
-}
-.chara-adder-circle > div {
-  transform-origin: center center;
-  flex-shrink: 0;
-  translate: -50% -50%;
 }
 
 .card-mark--selected {

@@ -9,6 +9,7 @@ import { CharaCreateResponse } from "@/lib/schemas";
 import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/chara-adder";
 import { useMeasure } from "@uidotdev/usehooks";
+import "./test-adder.css";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -88,13 +89,12 @@ export default function AddCardPage() {
   }
 
 
-  
-  console.log(width)
-  console.log(height)
-
-  const total = 10 + 1 + addedCharas.length;
+  const total = 12;
   const radius = (width ?? 0) / 2;
   const h = imgHeight ?? 0;
+  console.log(h)
+
+  let allowAddCard = addedCharas.length < 12;
 
   const getSlotStyle = (index: number) => {
     const angleRad = (index / total) * 2 * Math.PI;
@@ -105,6 +105,7 @@ export default function AddCardPage() {
       top: `${cy}px`,
       left: `${cx}px`,
       transform: `rotate(${(-angleRad * 180) / Math.PI}deg)`,
+      translate: `-50% -50%`
     };
   };
 
@@ -112,39 +113,54 @@ export default function AddCardPage() {
     <div className="flex flex-1 flex-col">
       <main className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center"> {/* gap-16 px-4 */}
 
-        <div className="w-full h-full">
-          <div ref={ref} className="chara-adder-circle w-[110vw] relative aspect-square">
-            <div className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(0)}>
-              <CharaAdder
-                value={newName}
-                onValueChange={setNewName}
-                avatar={newAvatar}
-                onAvatarChange={setNewAvatar}
-              />
-            </div>            
-            {Array.from({ length: 10 }).map((_, i) => (
+        <div className="w-full h-full flex justify-center">
+          <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0">
+            {
+              allowAddCard && (
+                <div className="w-[min(19vh,22vh)] absolute" style={getSlotStyle(0)}>
+                  <CharaAdder
+                    value={newName}
+                    onValueChange={setNewName}
+                    avatar={newAvatar}
+                    onAvatarChange={setNewAvatar}
+                  />
+                </div>
+              )
+            }
+            {Array.from({ length: total - 1 - addedCharas.length }).map((_, i) => (
               <div
                 key={`deco-${i}`}
                 ref={i === 0 ? cardRef : undefined}
-                className="w-[min(17.0833vw,22vh)] absolute"
+                className="w-[min(19vh,22vh)] absolute"
                 style={getSlotStyle(i + 1)}
               >
                 <CharaCard id={null} name={null} avatar={null} state="deco" />
               </div>
             ))}
             {addedCharas.map((c, i) => (
-              <div key={`chara-${i}`} className="w-[min(17.0833vw,22vh)] absolute" style={getSlotStyle(11 + i)}>
+              <div key={`chara-${i}`} className="w-[min(19vh,22vh)] absolute" style={getSlotStyle(total - addedCharas.length + i)}>
                 <CharaCard id={null} name={c.name} avatar={addedAvatarUrls[i] ?? null} />
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
+        <div className="flex flex-col gap-[2vh] items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
+          {
+            !allowAddCard && (
+              <span className="warning">{t("warningAddExceed")}</span>
+            )
+          }
+
           <div className="flex flex-row gap-[1.1111vw]"> {/* gap-4 */}
-            <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
-              {t("addCard")}
-            </button>
+            {
+              allowAddCard && (
+                <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
+                  {t("addCard")}
+                </button>
+              )
+            }
+
             <button
               className="btn btn--secondary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
