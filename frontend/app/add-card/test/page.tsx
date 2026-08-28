@@ -47,6 +47,7 @@ export default function AddCardPage() {
   
   const [rotation, setRotation] = useState(0);
   const lastWheelRef = useRef(0);
+  const touchStartXRef = useRef<number | null>(null);
 
   const handleDone = async () => {
     if (addedCharas.length === 0 || submitting) return;
@@ -117,6 +118,24 @@ export default function AddCardPage() {
     setRotation((prev) => prev + dir * step);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const delta = e.touches[0].clientX - touchStartXRef.current;
+    const threshold = 40;
+    if (Math.abs(delta) < threshold) return;
+    const dir = delta < 0 ? -1 : 1;
+    setRotation((prev) => prev + dir * step);
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    touchStartXRef.current = null;
+  };
+
   const activeIndex = ((Math.round((rotation / 360) * total) % total) + total) % total;
 
   const handleConfirm = () => {
@@ -125,7 +144,13 @@ export default function AddCardPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center" onWheel={handleWheel}> {/* gap-16 px-4 */}
+      <main
+        className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center"
+        onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      > {/* gap-16 px-4 */}
 
         <div className="w-full h-full flex justify-center">
           <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0" style={{ transform: `translateY(var(--circle-y)) rotate(${rotation}deg)` }}>
