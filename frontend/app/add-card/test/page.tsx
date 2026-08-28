@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
@@ -46,6 +46,7 @@ export default function AddCardPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   
   const [rotation, setRotation] = useState(0);
+  const lastWheelRef = useRef(0);
 
   const handleDone = async () => {
     if (addedCharas.length === 0 || submitting) return;
@@ -106,16 +107,15 @@ export default function AddCardPage() {
   };
 
 
-  const handleWheel = (e: React.WheelEvent) => {
-    const dir = e.deltaY > 0 ? -4 : 4;
-    setRotation((prev) => {
-      let next = prev + dir;
-      if (next <= -360) next += 360;
-      if (next > 0) next -= 360;
-      return next;
-    });
-  };
+  const step = 360 / total;
 
+  const handleWheel = (e: React.WheelEvent) => {
+    const now = Date.now();
+    if (now - lastWheelRef.current < 200) return;
+    lastWheelRef.current = now;
+    const dir = e.deltaY > 0 ? -1 : 1;
+    setRotation((prev) => prev + dir * step);
+  };
 
   const activeIndex = ((Math.round((rotation / 360) * total) % total) + total) % total;
 

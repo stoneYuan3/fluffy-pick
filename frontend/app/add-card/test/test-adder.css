@@ -13,6 +13,7 @@
   animation: cards-enter 1s;
   transform: translateY(var(--circle-y));
   height: max-content;
+  transition: transform 250ms ease-out;
   /* transform-origin: center 100vh */
 }
 .chara-adder-circle > div {
