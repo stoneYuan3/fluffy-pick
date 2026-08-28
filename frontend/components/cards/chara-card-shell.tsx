@@ -10,6 +10,10 @@ export type CardState =
   | "active"
   | "flipped";
 
+export type CardAdderState =
+  | "ready"
+  | "sleep"
+
 export interface CharaCardShellProps {
   state?: CardState;
   avatar?: ReactNode;

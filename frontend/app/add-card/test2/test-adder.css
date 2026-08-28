@@ -12,8 +12,6 @@
   /* translate: -6% 4%; */
   animation: cards-enter 1s;
   transform: translateY(var(--circle-y));
-  height: max-content;
-  /* transform-origin: center 100vh */
 }
 .chara-adder-circle > div {
   transform-origin: center center;

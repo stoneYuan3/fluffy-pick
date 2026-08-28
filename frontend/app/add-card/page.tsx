@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { CharaCreateResponse } from "@/lib/schemas";
 import { CharaCard } from "@/components/cards/chara-card";
-import { CharaAdder } from "@/components/chara-adder";
+import { CharaAdder } from "@/components/cards/chara-adder";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

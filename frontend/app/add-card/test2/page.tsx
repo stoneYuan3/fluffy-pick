@@ -6,11 +6,10 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { CharaCreateResponse } from "@/lib/schemas";
-// import { CharaCard } from "@/components/cards/chara-card";
+import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/cards/chara-adder";
 import { useMeasure } from "@uidotdev/usehooks";
 import "./test-adder.css";
-// import "../../../components/cards/chara-card.css";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -25,8 +24,8 @@ export default function AddCardPage() {
   const router = useRouter();
   const t = useTranslations("addCard");
   const { user, loading } = useAuth();
-  // const [newName, setNewName] = useState("");
-  // const [newAvatar, setNewAvatar] = useState<File | null>(null);
+  const [newName, setNewName] = useState("");
+  const [newAvatar, setNewAvatar] = useState<File | null>(null);
 
   const [addedCharas, setAddedCharas] = useState<{ name: string; avatar: File | null }[]>([]);
   const [addedAvatarUrls, setAddedAvatarUrls] = useState<(string | null)[]>([]);
@@ -42,10 +41,15 @@ export default function AddCardPage() {
     };
   }, [addedCharas]);
 
+  const handleAddCard = () => {
+    if (!newName.trim()) return;
+    setAddedCharas((prev) => [...prev, { name: newName, avatar: newAvatar }]);
+    setNewName("");
+    setNewAvatar(null);
+  };
+
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  
-  const [rotation, setRotation] = useState(0);
 
   const handleDone = async () => {
     if (addedCharas.length === 0 || submitting) return;
@@ -85,7 +89,7 @@ export default function AddCardPage() {
   }
 
 
-  const total = 16;
+  const total = 12;
   const radius = (width ?? 0) / 2;
   const h = imgHeight ?? 0;
   console.log(h)
@@ -105,39 +109,39 @@ export default function AddCardPage() {
     };
   };
 
-
-  const handleWheel = (e: React.WheelEvent) => {
-    const dir = e.deltaY > 0 ? -4 : 4;
-    setRotation((prev) => {
-      let next = prev + dir;
-      if (next <= -360) next += 360;
-      if (next > 0) next -= 360;
-      return next;
-    });
-  };
-
-
-  const activeIndex = ((Math.round((rotation / 360) * total) % total) + total) % total;
-
-  const handleConfirm = () => {
-
-  }
-
   return (
     <div className="flex flex-1 flex-col">
-      <main className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center" onWheel={handleWheel}> {/* gap-16 px-4 */}
+      <main className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center"> {/* gap-16 px-4 */}
 
         <div className="w-full h-full flex justify-center">
-          <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0" style={{ transform: `translateY(var(--circle-y)) rotate(${rotation}deg)` }}>
-
-            {Array.from({ length: total }).map((_, i) => (
-              <div key={`card-${i}`} className={`w-[min(19vh,22vh)] absolute${i === activeIndex ? ' active' : ''}`} style={getSlotStyle(i)}>
-                <CharaAdder
-                  state={i === 0 ? 'ready' : 'sleep'}
-                />
+          <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0">
+            {
+              allowAddCard && (
+                <div className="w-[min(19vh,22vh)] absolute" style={getSlotStyle(0)}>
+                  <CharaAdder
+                    value={newName}
+                    onValueChange={setNewName}
+                    avatar={newAvatar}
+                    onAvatarChange={setNewAvatar}
+                  />
+                </div>
+              )
+            }
+            {Array.from({ length: total - 1 - addedCharas.length }).map((_, i) => (
+              <div
+                key={`deco-${i}`}
+                ref={i === 0 ? cardRef : undefined}
+                className="w-[min(19vh,22vh)] absolute"
+                style={getSlotStyle(i + 1)}
+              >
+                <CharaCard id={null} name={null} avatar={null} state="deco" />
               </div>
             ))}
-
+            {addedCharas.map((c, i) => (
+              <div key={`chara-${i}`} className="w-[min(19vh,22vh)] absolute" style={getSlotStyle(total - addedCharas.length + i)}>
+                <CharaCard id={null} name={c.name} avatar={addedAvatarUrls[i] ?? null} />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -151,7 +155,7 @@ export default function AddCardPage() {
           <div className="flex flex-row gap-[1.1111vw]"> {/* gap-4 */}
             {
               allowAddCard && (
-                <button className="btn btn--primary text-[1.6667vw]" onClick={handleConfirm}> {/* 24px */}
+                <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
                   {t("addCard")}
                 </button>
               )
