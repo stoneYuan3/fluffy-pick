@@ -28,34 +28,35 @@ export default function AddCardPage() {
   // const [newName, setNewName] = useState("");
   // const [newAvatar, setNewAvatar] = useState<File | null>(null);
 
-  const [addedCharas, setAddedCharas] = useState<{ name: string; avatar: File | null }[]>([]);
-  const [addedAvatarUrls, setAddedAvatarUrls] = useState<(string | null)[]>([]);
+  const total = 16;
+
+  const [charas, setCharas] = useState<{ name: string; avatar: File | null }[]>(
+    () => Array.from({ length: total }, () => ({ name: "", avatar: null })),
+  );
+  const updateChara = (
+    i: number,
+    patch: Partial<{ name: string; avatar: File | null }>,
+  ) => setCharas((prev) => prev.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
 
   const [ref, { width, height }] = useMeasure();
   const [cardRef, { height: imgHeight }] = useMeasure();
 
-  useEffect(() => {
-    const urls = addedCharas.map((c) => (c.avatar ? URL.createObjectURL(c.avatar) : null));
-    setAddedAvatarUrls(urls);
-    return () => {
-      urls.forEach((u) => u && URL.revokeObjectURL(u));
-    };
-  }, [addedCharas]);
-
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  
+
   const [rotation, setRotation] = useState(0);
   const lastWheelRef = useRef(0);
   const touchStartXRef = useRef<number | null>(null);
 
+  const filledCharas = charas.filter((c) => c.name.trim().length > 0);
+
   const handleDone = async () => {
-    if (addedCharas.length === 0 || submitting) return;
+    if (filledCharas.length === 0 || submitting) return;
     setSubmitting(true);
     setSubmitError(null);
     try {
       const payload = await Promise.all(
-        addedCharas.map(async (c) => ({
+        filledCharas.map(async (c) => ({
           name: c.name,
           avatar: c.avatar ? await fileToBase64(c.avatar) : null,
         })),
@@ -65,7 +66,7 @@ export default function AddCardPage() {
         { method: "POST", body: JSON.stringify({ charas: payload }) },
         CharaCreateResponse,
       );
-      setAddedCharas([]);
+      setCharas(Array.from({ length: total }, () => ({ name: "", avatar: null })));
       router.push("/home");
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : t("failedSave"));
@@ -87,12 +88,11 @@ export default function AddCardPage() {
   }
 
 
-  const total = 16;
   const radius = (width ?? 0) / 2;
   const h = imgHeight ?? 0;
   console.log(h)
 
-  let allowAddCard = addedCharas.length < 12;
+  let allowAddCard = filledCharas.length < 12;
 
   const getSlotStyle = (index: number) => {
     const angleRad = (index / total) * 2 * Math.PI;
@@ -139,8 +139,19 @@ export default function AddCardPage() {
   const activeIndex = ((Math.round((rotation / 360) * total) % total) + total) % total;
 
   const handleConfirm = () => {
-
-  }
+    let target = -1;
+    for (let i = 1; i <= total; i++) {
+      const idx = (activeIndex + i) % total;
+      if (!charas[idx].name.trim()) {
+        target = idx;
+        break;
+      }
+    }
+    if (target === -1) return;
+    let delta = (((target - activeIndex) % total) + total) % total;
+    if (delta > total / 2) delta -= total;
+    setRotation((prev) => prev + delta * step);
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -155,10 +166,14 @@ export default function AddCardPage() {
         <div className="w-full h-full flex justify-center">
           <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0" style={{ transform: `translateY(var(--circle-y)) rotate(${rotation}deg)` }}>
 
-            {Array.from({ length: total }).map((_, i) => (
+            {charas.map((c, i) => (
               <div key={`card-${i}`} className={`w-[min(19vh,22vh)] absolute${i === activeIndex ? ' active' : ''}`} style={getSlotStyle(i)}>
                 <CharaAdder
-                  state={i === 0 ? 'ready' : 'sleep'}
+                  state={i === activeIndex ? 'ready' : 'sleep'}
+                  value={c.name}
+                  onValueChange={(n) => updateChara(i, { name: n })}
+                  avatar={c.avatar}
+                  onAvatarChange={(a) => updateChara(i, { avatar: a })}
                 />
               </div>
             ))}
@@ -185,7 +200,7 @@ export default function AddCardPage() {
             <button
               className="btn btn--secondary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
-              disabled={submitting || addedCharas.length === 0}
+              disabled={submitting || filledCharas.length === 0}
             >
               {submitting ? t("saving") : t("done")}
             </button>

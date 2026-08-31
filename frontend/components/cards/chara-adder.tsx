@@ -9,31 +9,26 @@ import { CardAdderState } from "./chara-card-shell";
 
 
 export interface CharaAdderProps {
-  state: CardAdderState | null
+  state?: CardAdderState | null;
+  value: string;
+  onValueChange: (v: string) => void;
+  avatar: File | null;
+  onAvatarChange: (f: File | null) => void;
 }
 
-export function CharaAdder({ state = "ready" }: CharaAdderProps) {
+export function CharaAdder({ state = "ready", value, onValueChange, avatar, onAvatarChange }: CharaAdderProps) {
   const t = useTranslations("addCard");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const [newName, setNewName] = useState("");
-  const [newAvatar, setNewAvatar] = useState<File | null>(null);
-
-  const handleAddCard = () => {
-    if (!newName.trim()) return;
-    setNewName("");
-    setNewAvatar(null);
-  };
-
   useEffect(() => {
-    if (!newAvatar) {
+    if (!avatar) {
       setPreviewUrl(null);
       return;
     }
-    const url = URL.createObjectURL(newAvatar);
+    const url = URL.createObjectURL(avatar);
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
-  }, [newAvatar]);
+  }, [avatar]);
 
   return (
     <CharaCardShell
@@ -44,7 +39,7 @@ export function CharaAdder({ state = "ready" }: CharaAdderProps) {
             type="file"
             accept="image/*"
             className="sr-only"
-            onChange={(e) => setNewAvatar(e.target.files?.[0] ?? null)}
+            onChange={(e) => onAvatarChange(e.target.files?.[0] ?? null)}
           />
           {previewUrl ? (
             <img src={previewUrl} alt="" className="w-full h-full object-cover aspect-square" />
@@ -61,8 +56,8 @@ export function CharaAdder({ state = "ready" }: CharaAdderProps) {
       name={
         <input
           type="text"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
+          value={value}
+          onChange={(e) => onValueChange(e.target.value)}
           className="card-name m-auto border-0 bg-transparent p-0 outline-none focus:ring-0"
           placeholder={t("namePlaceholder")}
         />
