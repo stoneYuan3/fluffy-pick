@@ -54,8 +54,9 @@
   },
   "addCard": {
     "loading": "加载中...",
-    "addCard": "添加卡片",
-    "done": "完成",
+    "addCard": "下一个",
+    "cancelAddCard": "还是算了吧",
+    "done": "确认",
     "saving": "保存中...",
     "failedSave": "保存失败",
     "namePlaceholder": "名字",

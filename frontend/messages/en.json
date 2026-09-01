@@ -54,8 +54,9 @@
   },
   "addCard": {
     "loading": "Loading...",
-    "addCard": "Add Card",
-    "done": "Done",
+    "addCard": "Next One",
+    "cancelAddCard": "Nevermind, cancel.",
+    "done": "Confirm",
     "saving": "Saving...",
     "failedSave": "Failed to save",
     "namePlaceholder": "Name",

@@ -3,9 +3,6 @@ import { useTranslations } from "next-intl";
 
 export type CardState =
   | "normal"
-  | "add"
-  | "deco"
-  | "button"
   | "selected"
   | "active"
   | "flipped";

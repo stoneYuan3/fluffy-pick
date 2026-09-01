@@ -1,13 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { CharaCreateResponse } from "@/lib/schemas";
-import { CharaCard } from "@/components/cards/chara-card";
+// import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/cards/chara-adder";
+import { useMeasure } from "@uidotdev/usehooks";
+import "./circle-adder.css";
+// import "../../../components/cards/chara-card.css";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -22,40 +25,38 @@ export default function AddCardPage() {
   const router = useRouter();
   const t = useTranslations("addCard");
   const { user, loading } = useAuth();
-  const [newName, setNewName] = useState("");
-  const [newAvatar, setNewAvatar] = useState<File | null>(null);
+  // const [newName, setNewName] = useState("");
+  // const [newAvatar, setNewAvatar] = useState<File | null>(null);
 
-  const [addedCharas, setAddedCharas] = useState<{ name: string; avatar: File | null }[]>([]);
-  const latestChara = addedCharas[addedCharas.length - 1] ?? null;
-  const [latestAvatarUrl, setLatestAvatarUrl] = useState<string | null>(null);
+  const total = 16;
 
-  useEffect(() => {
-    if (!latestChara?.avatar) {
-      setLatestAvatarUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(latestChara.avatar);
-    setLatestAvatarUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [latestChara?.avatar]);
+  const [charas, setCharas] = useState<{ name: string; avatar: File | null }[]>(
+    () => Array.from({ length: total }, () => ({ name: "", avatar: null })),
+  );
+  const updateChara = (
+    i: number,
+    patch: Partial<{ name: string; avatar: File | null }>,
+  ) => setCharas((prev) => prev.map((c, idx) => (idx === i ? { ...c, ...patch } : c)));
 
-  const handleAddCard = () => {
-    if (!newName.trim()) return;
-    setAddedCharas((prev) => [...prev, { name: newName, avatar: newAvatar }]);
-    setNewName("");
-    setNewAvatar(null);
-  };
+  const [ref, { width, height }] = useMeasure();
+  const [cardRef, { height: imgHeight }] = useMeasure();
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const [rotation, setRotation] = useState(0);
+  const lastWheelRef = useRef(0);
+  const touchStartXRef = useRef<number | null>(null);
+
+  const filledCharas = charas.filter((c) => c.name.trim().length > 0);
+
   const handleDone = async () => {
-    if (addedCharas.length === 0 || submitting) return;
+    if (filledCharas.length === 0 || submitting) return;
     setSubmitting(true);
     setSubmitError(null);
     try {
       const payload = await Promise.all(
-        addedCharas.map(async (c) => ({
+        filledCharas.map(async (c) => ({
           name: c.name,
           avatar: c.avatar ? await fileToBase64(c.avatar) : null,
         })),
@@ -65,7 +66,7 @@ export default function AddCardPage() {
         { method: "POST", body: JSON.stringify({ charas: payload }) },
         CharaCreateResponse,
       );
-      setAddedCharas([]);
+      setCharas(Array.from({ length: total }, () => ({ name: "", avatar: null })));
       router.push("/home");
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : t("failedSave"));
@@ -86,42 +87,122 @@ export default function AddCardPage() {
     );
   }
 
+
+  const radius = (width ?? 0) / 2;
+  const h = imgHeight ?? 0;
+  console.log(h)
+
+  let allowAddCard = filledCharas.length < 12;
+
+  const getSlotStyle = (index: number) => {
+    const angleRad = (index / total) * 2 * Math.PI;
+    const r = radius - h / 2;
+    const cx = radius - r * Math.sin(angleRad);
+    const cy = radius - r * Math.cos(angleRad);
+    return {
+      top: `${cy}px`,
+      left: `${cx}px`,
+      transform: `rotate(${(-angleRad * 180) / Math.PI}deg)`,
+      translate: `-50% -50%`
+    };
+  };
+
+
+  const step = 360 / total;
+  const maxRotation = filledCharas.length * step;
+  const clampRotation = (r: number) => Math.max(0, Math.min(maxRotation, r));
+
+  const handleWheel = (e: React.WheelEvent) => {
+    const now = Date.now();
+    if (now - lastWheelRef.current < 200) return;
+    lastWheelRef.current = now;
+    const dir = e.deltaY > 0 ? 1 : -1;
+    setRotation((prev) => clampRotation(prev + dir * step));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const delta = e.touches[0].clientX - touchStartXRef.current;
+    const threshold = 40;
+    if (Math.abs(delta) < threshold) return;
+    const dir = delta < 0 ? 1 : -1;
+    setRotation((prev) => clampRotation(prev + dir * step));
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    touchStartXRef.current = null;
+  };
+
+  const activeIndex = ((Math.round((rotation / 360) * total) % total) + total) % total;
+
+  const handleConfirm = () => {
+    const target = filledCharas.length;
+    if (target >= total) return;
+    setRotation(clampRotation(target * step));
+  };
+
+  const handleCancel = () => router.push("/home");
+
   return (
     <div className="flex flex-1 flex-col">
-      <main className="chara-adder flex flex-1 flex-col gap-[4.4444vw] items-center justify-center px-[1.1111vw]"> {/* gap-16 px-4 */}
-        <div className="card-adder flex flex-row items-center justify-center w-full gap-[2vw] pb-[6vw]">
-          <div className="relative z-0 w-[min(17.0833vw,24.0234vh)] translate-x-[45%] translate-y-[2%] rotate-[-5deg]"> {/* 246px @ 1440x1024 */}
-            <CharaCard id={null} name={null} avatar={null} state="deco" />
-          </div>
-          <div className="relative z-10 w-[min(17.0833vw,24.0234vh)]">
-            <CharaAdder
-              value={newName}
-              onValueChange={setNewName}
-              avatar={newAvatar}
-              onAvatarChange={setNewAvatar}
-            />
-          </div>
-          <div className="relative z-0 w-[min(17.0833vw,24.0234vh)] translate-x-[-45%] translate-y-[2%] rotate-[5deg]">
-            {latestChara ? (
-              <CharaCard id={null} name={latestChara.name} avatar={latestAvatarUrl} state="normal" />
-            ) : (
-              <CharaCard id={null} name={null} avatar={null} state="deco" />
-            )}
+      <main
+        className="w-[100vw] h-[100vh] flex flex-col overflow-hidden items-center"
+        onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      > {/* gap-16 px-4 */}
+
+        <div className="w-full h-full flex justify-center">
+          <div ref={ref} className="chara-adder-circle w-[200vh] relative aspect-square shrink-0" style={{ transform: `translateY(var(--circle-y)) rotate(${rotation}deg)` }}>
+
+            {charas.map((c, i) => (
+              <div key={`card-${i}`} className={`w-[min(19vh,22vh)] absolute${i === activeIndex ? ' active' : ''}`} style={getSlotStyle(i)}>
+                <CharaAdder
+                  state={i === activeIndex ? 'ready' : 'sleep'}
+                  value={c.name}
+                  onValueChange={(n) => updateChara(i, { name: n })}
+                  avatar={c.avatar}
+                  onAvatarChange={(a) => updateChara(i, { avatar: a })}
+                />
+              </div>
+            ))}
+
           </div>
         </div>
-        <div className="flex flex-col items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
+
+        <div className="flex flex-col gap-[2vh] items-center gap-[0.5556vw] absolute bottom-[10%]"> {/* gap-2 */}
+          {
+            !allowAddCard && (
+              <span className="warning">{t("warningAddExceed")}</span>
+            )
+          }
+          
           <div className="flex flex-row gap-[1.1111vw]"> {/* gap-4 */}
-            <button className="btn btn--primary text-[1.6667vw]" onClick={handleAddCard}> {/* 24px */}
-              {t("addCard")}
-            </button>
+            {
+              allowAddCard && (
+                <button className="btn btn--secondary text-[1.6667vw]" onClick={handleConfirm}> {/* 24px */}
+                  {t("addCard")}
+                </button>
+              )
+            }
+
             <button
-              className="btn btn--secondary text-[1.6667vw] disabled:opacity-50" /* 24px */
+              className="btn btn--primary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
-              disabled={submitting || addedCharas.length === 0}
+              disabled={submitting || filledCharas.length === 0}
             >
               {submitting ? t("saving") : t("done")}
             </button>
           </div>
+            <button className="btn btn--tertiary text-[1.6667vw]" onClick={handleCancel}> {/* 24px */}
+                  {t("cancelAddCard")}
+            </button>          
           {submitError && <p className="text-sm text-red-600">{submitError}</p>}
         </div>
       </main>

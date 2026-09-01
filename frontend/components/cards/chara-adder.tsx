@@ -16,7 +16,7 @@ export interface CharaAdderProps {
   onAvatarChange: (f: File | null) => void;
 }
 
-export function CharaAdder({ state = "ready", value, onValueChange, avatar, onAvatarChange }: CharaAdderProps) {
+export function CharaAdder({ value, onValueChange, avatar, onAvatarChange }: CharaAdderProps) {
   const t = useTranslations("addCard");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -32,7 +32,6 @@ export function CharaAdder({ state = "ready", value, onValueChange, avatar, onAv
 
   return (
     <CharaCardShell
-      state="add"
       avatar={
         <label className="relative block w-full h-full cursor-pointer rounded-full overflow-hidden group bg-zinc-200 dark:bg-zinc-800">
           <input
