@@ -4,22 +4,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
-import { CharaCreateResponse } from "@/lib/schemas";
 // import { CharaCard } from "@/components/cards/chara-card";
 import { CharaAdder } from "@/components/cards/chara-adder";
+import { useCharas } from "@/hooks/use-charas";
 import { useMeasure } from "@uidotdev/usehooks";
 import "./circle-adder.css";
 // import "../../../components/cards/chara-card.css";
-
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
 
 export default function AddCardPage() {
   const router = useRouter();
@@ -41,8 +31,10 @@ export default function AddCardPage() {
   const [ref, { width, height }] = useMeasure();
   const [cardRef, { height: imgHeight }] = useMeasure();
 
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { create, creating, error: createErrorObj } = useCharas(false);
+  const submitError = createErrorObj
+    ? createErrorObj.message || t("failedSave")
+    : null;
 
   const [rotation, setRotation] = useState(0);
   const lastWheelRef = useRef(0);
@@ -51,27 +43,10 @@ export default function AddCardPage() {
   const filledCharas = charas.filter((c) => c.name.trim().length > 0);
 
   const handleDone = async () => {
-    if (filledCharas.length === 0 || submitting) return;
-    setSubmitting(true);
-    setSubmitError(null);
-    try {
-      const payload = await Promise.all(
-        filledCharas.map(async (c) => ({
-          name: c.name,
-          avatar: c.avatar ? await fileToBase64(c.avatar) : null,
-        })),
-      );
-      await apiFetch(
-        "/chara",
-        { method: "POST", body: JSON.stringify({ charas: payload }) },
-        CharaCreateResponse,
-      );
+    if (filledCharas.length === 0 || creating) return;
+    if (await create(filledCharas)) {
       setCharas(Array.from({ length: total }, () => ({ name: "", avatar: null })));
       router.push("/home");
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : t("failedSave"));
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -195,9 +170,9 @@ export default function AddCardPage() {
             <button
               className="btn btn--primary text-[1.6667vw] disabled:opacity-50" /* 24px */
               onClick={handleDone}
-              disabled={submitting || filledCharas.length === 0}
+              disabled={creating || filledCharas.length === 0}
             >
-              {submitting ? t("saving") : t("done")}
+              {creating ? t("saving") : t("done")}
             </button>
           </div>
             <button className="btn btn--tertiary text-[1.6667vw]" onClick={handleCancel}> {/* 24px */}

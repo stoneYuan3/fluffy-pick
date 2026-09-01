@@ -1,14 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { apiFetch } from "@/lib/api";
-import { CharaListResponse, CommitResponse, type Chara } from "@/lib/schemas";
 import { CharaCard } from "@/components/cards/chara-card";
 import type { CardState } from "@/components/cards/chara-card-shell";
 import { useSelection } from "@/hooks/use-selection";
 import { useLongPress } from "@/hooks/use-long-press";
+import { useCharas } from "@/hooks/use-charas";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
@@ -16,72 +15,41 @@ export default function HomePage() {
   const router = useRouter();
   const t = useTranslations("home");
   const { user, loading, logout } = useAuth();
-  const [charas, setCharas] = useState<Chara[] | null>(null);
-  const [charasError, setCharasError] = useState<string | null>(null);
+  const {
+    charas,
+    error: charasErrorObj,
+    committing,
+    archiving,
+    deleting,
+    commit,
+    archive,
+    remove,
+  } = useCharas(!!user);
+  const charasError = charasErrorObj
+    ? charasErrorObj.message || t("failedLoad")
+    : null;
   const [helperOpened, setHelperOpened] = useState<boolean>(false);
   const selection = useSelection<number>();
-  const [committing, setCommitting] = useState<boolean>(false);
 
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const longPress = useLongPress(() => setDeleteMode(true));
 
-  const [archiving, setArchiving] = useState<boolean>(false);
-  const [deleting, setDeleting] = useState<boolean>(false);
   const deleteDialogRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.replace("/");
   }, [loading, user, router]);
 
-  const loadCharas = useCallback(() => {
-    return apiFetch("/chara", {}, CharaListResponse)
-      .then((data) => setCharas(data.charas))
-      .catch((err) => setCharasError(err instanceof Error ? err.message : t("failedLoad")));
-  }, [t]);
-
-  useEffect(() => {
-    if (!user) return;
-    let cancelled = false;
-    apiFetch("/chara", {}, CharaListResponse)
-      .then((data) => { if (!cancelled) setCharas(data.charas); })
-      .catch((err) => { if (!cancelled) setCharasError(err instanceof Error ? err.message : t("failedLoad")); });
-    return () => { cancelled = true; };
-  }, [user, t]);
-
   const handleConfirm = async () => {
     if (selection.size === 0 || committing) return;
-    setCommitting(true);
-    try {
-      await apiFetch(
-        "/chara/commit",
-        { method: "POST", body: JSON.stringify({ ids: Array.from(selection.ids) }) },
-        CommitResponse,
-      );
-      selection.clear();
-      await loadCharas();
-    } catch (err) {
-      setCharasError(err instanceof Error ? err.message : t("failedCommit"));
-    } finally {
-      setCommitting(false);
-    }
+    if (await commit(Array.from(selection.ids))) selection.clear();
   };
 
   const handleArchive = async () => {
     if (selection.size === 0 || archiving) return;
-    setArchiving(true);
-    try {
-      await apiFetch(
-        "/chara/archive",
-        { method: "POST", body: JSON.stringify({ ids: Array.from(selection.ids) }) },
-        CommitResponse,
-      );
+    if (await archive(Array.from(selection.ids))) {
       selection.clear();
       setDeleteMode(false);
-      await loadCharas();
-    } catch (err) {
-      setCharasError(err instanceof Error ? err.message : t("failedArchive"));
-    } finally {
-      setArchiving(false);
     }
   };
 
@@ -96,22 +64,11 @@ export default function HomePage() {
 
   const handleDelete = async () => {
     if (selection.size === 0 || deleting) return;
-    setDeleting(true);
-    try {
-      await apiFetch(
-        "/chara/delete",
-        { method: "POST", body: JSON.stringify({ ids: Array.from(selection.ids) }) },
-        CommitResponse,
-      );
+    const ok = await remove(Array.from(selection.ids));
+    closeDeleteDialog();
+    if (ok) {
       selection.clear();
       setDeleteMode(false);
-      closeDeleteDialog();
-      await loadCharas();
-    } catch (err) {
-      setCharasError(err instanceof Error ? err.message : t("failedDelete"));
-      closeDeleteDialog();
-    } finally {
-      setDeleting(false);
     }
   };
 
