@@ -24,6 +24,24 @@ export const CommitBody = z.object({
   ids: z.array(z.number().int().positive()).min(1, "ids must be a non-empty array of integers").max(500),
 });
 
+export const FoodStatus = z.enum(["normal", "active"]);
+export type FoodStatus = z.infer<typeof FoodStatus>;
+
+export const FoodCreateBody = z.object({
+  name: z.string().trim().min(1, "Food requires a name").max(255),
+  description: z.string().max(10_000).nullable().optional(),
+  photos: z.array(z.string()).max(6, "Up to 6 photos per food"),
+});
+
+export const FoodDeleteBody = z.object({
+  ids: z.array(z.number().int().positive()).min(1).max(500),
+});
+
+export const FoodStatusBody = z.object({
+  ids: z.array(z.number().int().positive()).min(1).max(500),
+  status: FoodStatus,
+});
+
 export const Locale = z.enum(["en", "zh-CN"]);
 export type Locale = z.infer<typeof Locale>;
 

@@ -46,7 +46,7 @@ export default function AddCardPage() {
     if (filledCharas.length === 0 || creating) return;
     if (await create(filledCharas)) {
       setCharas(Array.from({ length: total }, () => ({ name: "", avatar: null })));
-      router.push("/home");
+      router.push("/chara");
     }
   };
 
@@ -121,7 +121,7 @@ export default function AddCardPage() {
     setRotation(clampRotation(target * step));
   };
 
-  const handleCancel = () => router.push("/home");
+  const handleCancel = () => router.push("/chara");
 
   return (
     <div className="flex flex-1 flex-col">

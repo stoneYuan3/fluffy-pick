@@ -50,7 +50,14 @@
     "cancel": "Cancel",
     "addCard": "Add Card",
     "settings": "Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "back": "返回",
+    "linkFood": "Foods",
+    "linkPlace": "Places",
+    "linkChara": "Chara",
+    "activeChara": "Active Cards",
+    "activeFood": "Planned Foods",
+    "activePlace": "Planned Places"
   },
   "addCard": {
     "loading": "Loading...",
@@ -65,6 +72,25 @@
   },
   "card": {
     "active": "On duty"
+  },
+  "food": {
+    "foodTitle": "Foods",
+    "storedFoodTitle": "Menu",
+    "activeFoodTitle": "Active Plan"
+  },
+  "addFood": {
+    "loading": "Loading...",
+    "title": "Add Food",
+    "photos": "Photos",
+    "removePhoto": "Remove photo",
+    "name": "Name",
+    "namePlaceholder": "e.g. Braised pork",
+    "description": "Description",
+    "descriptionPlaceholder": "Ingredients, notes, cooking steps...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "failedSave": "Failed to save"
   },
   "settings": {
     "title": "Settings",

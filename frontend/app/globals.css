@@ -32,12 +32,33 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-xiangcui-song);
+}
+
+h1 {
+  letter-spacing: 25%;
+}
+
+h2,
+h3,
+h4 {
+  letter-spacing: 15%;
 }
 
 button {
   cursor: pointer;
+}
+
+.home-control-panel {
+  font-family: var(--font-xiangcui-song);
+  letter-spacing: 35%;
+  font-size: 6vh;
 }
 
 .btn {
@@ -64,16 +85,17 @@ button {
   /* 0 4px 8px */
 }
 
-.btn--red {
-  
-}
+.btn--red {}
 
-
-.chara-board {
+.chara-board,
+.yellow-board {
   background: radial-gradient(157.36% 157.36% at 50% 50%, rgba(224, 197, 153, 0) 0%, #AE8B52 100%), #FDE897;
   box-shadow: 0 0.3704vh 0.8333vw rgba(0, 0, 0, 0.25);
   /* 0 4px 12px */
   border-radius: 1.7361vw;
+}
+
+.chara-board {
   /* 25px */
   aspect-ratio: 1080 / 768;
   container-type: inline-size;
@@ -84,10 +106,26 @@ button {
   }
 }
 
+.border-board {
+  border-radius: 1.7361vw;
+  border: 1vh dashed #F2E1C2;
+}
+
+.section-bg {
+  background: radial-gradient(179.82% 179.82% at 50% 50%, rgba(174, 139, 82, 0) 0%, rgba(174, 139, 82, 0.2) 100%), #FFFBF5;
+  box-shadow: 0 0.3704vh 0.8333vw rgba(0, 0, 0, 0.25);
+  /* 0 4px 12px */
+  border-radius: 1.7361vw;
+  /* 25px */
+  justify-content: center;
+  align-items: center;
+}
+
 .chara-buttons {
   position: absolute;
   bottom: 5%;
   margin: auto;
+
   & h4 {
     letter-spacing: 15%;
   }

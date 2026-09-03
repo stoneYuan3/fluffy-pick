@@ -59,3 +59,24 @@ export const CommitResponse = z.object({
   count: z.number().int().nonnegative(),
 });
 export type CommitResponse = z.infer<typeof CommitResponse>;
+
+export const FoodStatus = z.enum(["normal", "active"]);
+export type FoodStatus = z.infer<typeof FoodStatus>;
+
+export const Food = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  description: z.string().nullable(),
+  photos: z.array(z.string()),
+  status: FoodStatus,
+  lastActiveAt: z.string().nullable(),
+  activeNumber: z.number().int(),
+  createdDate: z.string(),
+});
+export type Food = z.infer<typeof Food>;
+
+export const FoodListResponse = z.object({ foods: z.array(Food) });
+export type FoodListResponse = z.infer<typeof FoodListResponse>;
+
+export const FoodCreateResponse = z.object({ food: Food });
+export type FoodCreateResponse = z.infer<typeof FoodCreateResponse>;

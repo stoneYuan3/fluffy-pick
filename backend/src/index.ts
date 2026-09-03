@@ -4,6 +4,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import authRouter from "./routes/auth.js";
 import charaRouter from "./routes/chara.js";
+import foodRouter from "./routes/food.js";
 import { errorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -18,6 +19,7 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use(rateLimit({ windowMs: 60_000, max: 100 }));
 app.use("/auth", authRouter);
 app.use("/chara", charaRouter);
+app.use("/food", foodRouter);
 app.use(errorHandler);
 
 const port = process.env["PORT"] || 4000;

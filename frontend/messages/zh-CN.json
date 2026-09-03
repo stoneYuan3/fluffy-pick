@@ -45,12 +45,19 @@
     "deleteConfirm": "确认将 {count} 张卡片遣放出宫？",
     "deleteModeTitle": "遣送",
     "addModeTitle": "宣爱妃侍寝",
-    "exitDeleteMode": "朕宅心仁厚，还是算了", 
+    "exitDeleteMode": "朕宅心仁厚，还是算了",
     "committing": "提交中...",
     "cancel": "取消",
     "addCard": "添加卡片",
     "settings": "设置",
-    "logout": "退出"
+    "logout": "退出",
+    "back": "返回",
+    "linkFood": "御膳房",
+    "linkPlace": "御书房",
+    "linkChara": "后宫",
+    "activeChara": "今日侍寝名单",
+    "activeFood": "用膳计划",
+    "activePlace": "出巡计划"
   },
   "addCard": {
     "loading": "加载中...",
@@ -65,6 +72,25 @@
   },
   "card": {
     "active": "侍寝中"
+  },
+  "food": {
+    "foodTitle": "御膳房",
+    "storedFoodTitle": "菜谱",
+    "activeFoodTitle": "用膳计划"
+  },
+  "addFood": {
+    "loading": "加载中...",
+    "title": "添加菜品",
+    "photos": "照片",
+    "removePhoto": "移除照片",
+    "name": "名称",
+    "namePlaceholder": "如：红烧肉",
+    "description": "描述",
+    "descriptionPlaceholder": "食材、备注、做法……",
+    "save": "保存",
+    "saving": "保存中...",
+    "cancel": "取消",
+    "failedSave": "保存失败"
   },
   "settings": {
     "title": "设置",

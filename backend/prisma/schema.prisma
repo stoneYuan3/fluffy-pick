@@ -17,6 +17,11 @@ enum CardStatus {
   archived
 }
 
+enum FoodStatus {
+  normal
+  active
+}
+
 model User {
   id          Int      @id @default(autoincrement())
   name        String   @unique @db.VarChar(255)
@@ -27,6 +32,7 @@ model User {
   createdDate DateTime @default(now()) @map("created_date")
 
   cards       Card[]
+  foods       Food[]
 
   @@map("users")
 }
@@ -45,4 +51,20 @@ model Card {
   creator     User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@map("cards")
+}
+
+model Food {
+  id           Int        @id @default(autoincrement())
+  creatorId    Int        @map("creator_id")
+  name         String     @db.VarChar(255)
+  description  String?
+  photos       String[]   @default([])
+  status       FoodStatus @default(normal)
+  createdDate  DateTime   @default(now()) @map("created_date")
+  lastActiveAt DateTime?  @map("last_active_at")
+  activeNumber Int        @default(0) @map("active_number")
+
+  creator      User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@map("foods")
 }
