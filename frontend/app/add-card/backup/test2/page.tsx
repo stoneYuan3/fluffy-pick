@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { CharaCreateResponse } from "@/lib/schemas";
-import { CharaCard } from "@/components/cards/chara-card";
-import { CharaAdder } from "@/components/cards/chara-adder";
+import { CharaCard } from "@/components/cards/chara-card/chara-card";
+import { CharaAdder } from "@/components/cards/chara-card/chara-adder";
 import { useMeasure } from "@uidotdev/usehooks";
 import "./test-adder.css";
 

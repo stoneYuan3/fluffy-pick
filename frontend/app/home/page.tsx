@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import type { CardState } from "@/components/cards/chara-card-shell";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useFoods } from "@/hooks/use-foods";
@@ -65,7 +64,12 @@ export default function HomePage() {
                   <p className="text-[1.6vh] text-zinc-500 col-span-2">{t("empty")}</p>
                 )}
                 {activeCharas?.map((c) => (
-                  <SmallCard key={c.id} image={c.avatar} text={c.name} />
+                  <SmallCard key={c.id}>
+                    <SmallCard.Image image={c.avatar} />
+                    <SmallCard.Body>
+                      <SmallCard.Title text={c.name}/>
+                    </SmallCard.Body>
+                  </SmallCard>
                 ))}
               </div>
             </div>

@@ -1,8 +1,7 @@
-"use client";
 
 import { SquareCheck } from "lucide-react";
 import type { Food } from "@/lib/schemas";
-import "@/components/cards/small-card/small-card.css";
+import { SmallCard } from "../small-card/small-card";
 
 export type FoodCardState = "normal" | "active";
 
@@ -17,30 +16,27 @@ export interface FoodCardProps {
 export function FoodCard({ food, state = "normal", onClick, onCheckClick, checkDisabled }: FoodCardProps) {
   const cover = food.photos[0];
   return (
-    <div
-      className="small-card flex flex-row items-center justify-between p-[1.5vh]"
-      onClick={onClick}
-    >
-      <div className="flex flex-row items-center gap-[1.5vh]">
-        <div className="small-card-cover aspect-square w-[8vh] rounded-[1vh] overflow-hidden bg-white/40 shrink-0">
-          {cover && <img src={cover} alt="" className="w-full h-full object-cover" />}
-        </div>
-        <span className="text-[2.2vh]">{food.name}</span>
-      </div>
-      {state === "active" && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onCheckClick?.();
-          }}
-          disabled={checkDisabled}
-          className="disabled:opacity-30"
-          aria-label="Mark as consumed"
-        >
-          <SquareCheck className="w-[2vh] h-[2vh] opacity-50 shrink-0" aria-hidden />
-        </button>
-      )}
-    </div>
-  );
+    <SmallCard onClick={onClick}>
+      {cover && <SmallCard.Image image={cover} />}
+      <SmallCard.Body>
+        <SmallCard.Title text={food.name} />
+      </SmallCard.Body>
+      <SmallCard.Action>
+        {state === "active" && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCheckClick?.();
+            }}
+            disabled={checkDisabled}
+            className="disabled:opacity-30"
+            aria-label="Mark as consumed"
+          >
+            <SquareCheck className="w-[2vh] h-[2vh] opacity-50 shrink-0" aria-hidden />
+          </button>
+        )}
+      </SmallCard.Action>
+    </SmallCard>
+  )
 }

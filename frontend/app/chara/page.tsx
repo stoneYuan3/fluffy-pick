@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { CharaCard } from "@/components/cards/chara-card";
-import type { CardState } from "@/components/cards/chara-card-shell";
+import { CharaCard } from "@/components/cards/chara-card/chara-card";
+import type { CardState } from "@/components/cards/chara-card/chara-card-shell";
 import { useSelection } from "@/hooks/use-selection";
 import { useLongPress } from "@/hooks/use-long-press";
 import { useCharas } from "@/hooks/use-charas";
