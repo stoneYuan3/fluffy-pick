@@ -35,3 +35,4 @@ Dates are the actual dates the decision was made (from git + conversation timest
 - [025 — PUT /food/status branches by target status](025-2026-09-02-food-status-put-branches-by-target.md)
 - [026 — dnd-kit for food drag with optimistic move](026-2026-09-02-dnd-kit-with-optimistic-move.md)
 - [027 — Native `<dialog>` for modals](027-2026-09-02-native-dialog-for-modals.md)
+- [028 — Compound component pattern for cards](028-2026-09-03-compound-component-pattern-for-cards.md)
