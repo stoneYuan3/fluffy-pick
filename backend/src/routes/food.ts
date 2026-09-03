@@ -67,12 +67,18 @@ router.delete("/", requireAuth, async (req: Request, res: Response, next: NextFu
 router.put("/status", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { ids, status } = FoodStatusBody.parse(req.body);
-    const data: { status: "normal" | "active"; lastActiveAt?: Date } = { status };
-    if (status === "active") data.lastActiveAt = new Date();
-    const result = await prisma.food.updateMany({
-      where: { id: { in: ids }, creatorId: req.userId! },
-      data,
-    });
+    let result;
+    if (status === "active") {
+      result = await prisma.food.updateMany({
+        where: { id: { in: ids }, creatorId: req.userId! },
+        data: { status: "active", lastActiveAt: new Date() },
+      });
+    } else {
+      result = await prisma.food.updateMany({
+        where: { id: { in: ids }, creatorId: req.userId!, status: "active" },
+        data: { status: "normal", activeNumber: { increment: 1 } },
+      });
+    }
     return res.json({ count: result.count });
   } catch (err) {
     return next(err);

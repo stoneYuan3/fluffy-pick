@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { apiFetch } from "@/lib/api";
 import {
   CommitResponse,
@@ -16,6 +16,7 @@ export interface FoodDraft {
 
 export interface UseFoods {
   foods: Food[] | null;
+  setFoods: Dispatch<SetStateAction<Food[] | null>>;
   error: Error | null;
   creating: boolean;
   deleting: boolean;
@@ -131,6 +132,7 @@ export function useFoods(scope: "normal" | "active" | null): UseFoods {
 
   return {
     foods,
+    setFoods,
     error,
     creating,
     deleting,

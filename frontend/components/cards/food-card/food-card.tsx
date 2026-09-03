@@ -10,9 +10,11 @@ export interface FoodCardProps {
   food: Food;
   state?: FoodCardState;
   onClick?: () => void;
+  onCheckClick?: () => void;
+  checkDisabled?: boolean;
 }
 
-export function FoodCard({ food, state = "normal", onClick }: FoodCardProps) {
+export function FoodCard({ food, state = "normal", onClick, onCheckClick, checkDisabled }: FoodCardProps) {
   const cover = food.photos[0];
   return (
     <div
@@ -26,7 +28,18 @@ export function FoodCard({ food, state = "normal", onClick }: FoodCardProps) {
         <span className="text-[2.2vh]">{food.name}</span>
       </div>
       {state === "active" && (
-        <SquareCheck className="w-[2vh] h-[2vh] opacity-50 shrink-0" aria-hidden />
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCheckClick?.();
+          }}
+          disabled={checkDisabled}
+          className="disabled:opacity-30"
+          aria-label="Mark as consumed"
+        >
+          <SquareCheck className="w-[2vh] h-[2vh] opacity-50 shrink-0" aria-hidden />
+        </button>
       )}
     </div>
   );
