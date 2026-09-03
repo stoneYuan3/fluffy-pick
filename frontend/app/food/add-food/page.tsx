@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth-context";
 import { useFoods } from "@/hooks/use-foods";
+import './add-food.css';
 
 const MAX_PHOTOS = 6;
 
@@ -69,8 +70,8 @@ export default function AddFoodPage() {
         <div className="section-bg w-[80vh] max-w-full p-[3vh] flex flex-col gap-[2vh]">
           <h1 className="text-[4vh] text-center">{t("title")}</h1>
 
-          <div className="flex flex-col gap-[1vh]">
-            <label className="text-[2vh]">
+          <div className="flex flex-col gap-[1.5vh] w-full">
+            <label className="text-[2vh] text-center">
               {t("photos")} ({photos.length}/{MAX_PHOTOS})
             </label>
             <div className="grid grid-cols-3 gap-[1vh]">
@@ -90,7 +91,7 @@ export default function AddFoodPage() {
                   </button>
                 </div>
               ))}
-              {photos.length < MAX_PHOTOS && (
+              {photos.length < MAX_PHOTOS && photos.length != 0 && (
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -99,6 +100,17 @@ export default function AddFoodPage() {
                   +
                 </button>
               )}
+              {
+                photos.length === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="aspect-square bg-white rounded flex items-center justify-center text-[4vh] text-zinc-400"
+                  >
+                    +
+                  </button>
+                )
+              }
             </div>
             <input
               ref={fileInputRef}
@@ -110,8 +122,8 @@ export default function AddFoodPage() {
             />
           </div>
 
-          <div className="flex flex-col gap-[1vh]">
-            <label className="text-[2vh]" htmlFor="food-name">
+          <div className="flex flex-col gap-[1vh] w-full">
+            <label className="text-[2vh] text-center" htmlFor="food-name">
               {t("name")}
             </label>
             <input
@@ -119,21 +131,21 @@ export default function AddFoodPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-[1vh] rounded bg-white text-black"
+              className="w-full p-[1vh] rounded bg-white text-black text-[1.5vh]"
               placeholder={t("namePlaceholder")}
               maxLength={255}
             />
           </div>
 
-          <div className="flex flex-col gap-[1vh]">
-            <label className="text-[2vh]" htmlFor="food-description">
+          <div className="flex flex-col gap-[1vh] w-full">
+            <label className="text-[2vh] text-center" htmlFor="food-description">
               {t("description")}
             </label>
             <textarea
               id="food-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-[1vh] rounded bg-white text-black min-h-[15vh] whitespace-pre-wrap"
+              className="w-full p-[1vh] rounded bg-white text-black min-h-[25vh] whitespace-pre-wrap text-[1.5vh]"
               placeholder={t("descriptionPlaceholder")}
               maxLength={10000}
             />

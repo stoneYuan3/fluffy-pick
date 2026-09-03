@@ -31,7 +31,7 @@ export default function AddCardPage() {
   const [ref, { width, height }] = useMeasure();
   const [cardRef, { height: imgHeight }] = useMeasure();
 
-  const { create, creating, error: createErrorObj } = useCharas(false);
+  const { create, creating, error: createErrorObj } = useCharas(null);
   const submitError = createErrorObj
     ? createErrorObj.message || t("failedSave")
     : null;

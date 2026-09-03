@@ -76,7 +76,8 @@
   "food": {
     "foodTitle": "Foods",
     "storedFoodTitle": "Menu",
-    "activeFoodTitle": "Active Plan"
+    "activeFoodTitle": "Active Plan",
+    "close": "Close"
   },
   "addFood": {
     "loading": "Loading...",

@@ -76,7 +76,8 @@
   "food": {
     "foodTitle": "御膳房",
     "storedFoodTitle": "菜谱",
-    "activeFoodTitle": "用膳计划"
+    "activeFoodTitle": "用膳计划",
+    "close": "关闭"
   },
   "addFood": {
     "loading": "加载中...",

@@ -20,6 +20,21 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
   return res.json({ charas });
 });
 
+router.get("/active", requireAuth, async (req: Request, res: Response) => {
+  const cutoff = currentCutoff();
+  const rows = await prisma.card.findMany({
+    where: {
+      creatorId: req.userId!,
+      status: "normal",
+      activatedAt: { gte: cutoff },
+    },
+    select: { id: true, name: true, avatar: true },
+    orderBy: { activatedAt: "desc" },
+  });
+  const charas = rows.map((r) => ({ ...r, state: "active" as const }));
+  return res.json({ charas });
+});
+
 router.post("/", requireAuth, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { charas } = CharaCreateBody.parse(req.body);

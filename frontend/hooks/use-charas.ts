@@ -35,7 +35,7 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export function useCharas(autoLoad: boolean): UseCharas {
+export function useCharas(scope: "all" | "active" | null): UseCharas {
   const [charas, setCharas] = useState<Chara[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [creating, setCreating] = useState(false);
@@ -44,18 +44,21 @@ export function useCharas(autoLoad: boolean): UseCharas {
   const [deleting, setDeleting] = useState(false);
 
   const reload = useCallback(async () => {
+    if (!scope) return;
+    const path = scope === "all" ? "/chara" : "/chara/active";
     try {
-      const data = await apiFetch("/chara", {}, CharaListResponse);
+      const data = await apiFetch(path, {}, CharaListResponse);
       setCharas(data.charas);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     }
-  }, []);
+  }, [scope]);
 
   useEffect(() => {
-    if (!autoLoad) return;
+    if (!scope) return;
     let cancelled = false;
-    apiFetch("/chara", {}, CharaListResponse)
+    const path = scope === "all" ? "/chara" : "/chara/active";
+    apiFetch(path, {}, CharaListResponse)
       .then((data) => {
         if (!cancelled) setCharas(data.charas);
       })
@@ -65,7 +68,7 @@ export function useCharas(autoLoad: boolean): UseCharas {
     return () => {
       cancelled = true;
     };
-  }, [autoLoad]);
+  }, [scope]);
 
   const runMutation = useCallback(
     async (setFlag: (v: boolean) => void, fn: () => Promise<void>): Promise<boolean> => {
@@ -73,7 +76,7 @@ export function useCharas(autoLoad: boolean): UseCharas {
       setError(null);
       try {
         await fn();
-        await reload();
+        if (scope) await reload();
         return true;
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)));
@@ -82,7 +85,7 @@ export function useCharas(autoLoad: boolean): UseCharas {
         setFlag(false);
       }
     },
-    [reload],
+    [reload, scope],
   );
 
   const create = useCallback(

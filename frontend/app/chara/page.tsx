@@ -24,7 +24,7 @@ export default function CharaPage() {
     commit,
     archive,
     remove,
-  } = useCharas(!!user);
+  } = useCharas(user ? "all" : null);
   const charasError = charasErrorObj
     ? charasErrorObj.message || t("failedLoad")
     : null;
@@ -180,7 +180,6 @@ export default function CharaPage() {
         <HelperFigure
           links={[
             { href: "/add-card", label: t("addCard") },
-            { href: "/settings", label: t("settings") },
           ]}
         />
 
